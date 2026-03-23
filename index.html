@@ -36,7 +36,7 @@ const vehicle = vehicles[id];
 
 if(vehicle){
   document.getElementById("vehicleInfo").innerText =
-    Vehicle: ${vehicle.name} (${vehicle.number});
+    `Vehicle: ${vehicle.name} (${vehicle.number})`;
 } else {
   document.getElementById("vehicleInfo").innerText =
     "Invalid QR Code";
@@ -54,14 +54,20 @@ function sendMessage(type){
 }
 
 function sendCustom(){
+  if(!vehicle) return;
+
   const msg = document.getElementById("customMsg").value;
-  if(!msg) return alert("Enter message");
+  if(!msg) {
+    alert("Enter message");
+    return;
+  }
+
   sendWhatsApp(msg);
 }
 
 function sendWhatsApp(message){
   const phone = vehicle.phone;
-  const url = https://wa.me/${phone}?text=${encodeURIComponent(message)};
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   window.location.href = url;
 }
 </script>
