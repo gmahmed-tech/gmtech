@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Vehicle Contact</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>🚗 Contact Vehicle Owner</h2>
+
+  <p id="vehicleInfo">Loading...</p>
+
+  <div class="buttons">
+    <button onclick="sendMessage('blocking')">🚫 Blocking Road</button>
+    <button onclick="sendMessage('lights')">💡 Lights ON</button>
+    <button onclick="sendMessage('emergency')">🚨 Emergency</button>
+  </div>
+
+  <textarea id="customMsg" placeholder="Write your message..."></textarea>
+
+<button onclick="sendCustom()">Send Custom Message</button>
+
+  <p id="status"></p>
+</div>
+
+<script src="data.js"></script>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+const vehicle = vehicles[id];
+
+if(vehicle){
+  document.getElementById("vehicleInfo").innerText =
+    Vehicle: ${vehicle.name} (${vehicle.number});
+} else {
+  document.getElementById("vehicleInfo").innerText =
+    "Invalid QR Code";
+}
+
+function sendMessage(type){
+  if(!vehicle) return;
+
+  let msg = "";
+  if(type === "blocking") msg = "Your vehicle is blocking the road.";
+  if(type === "lights") msg = "Your vehicle lights are ON.";
+  if(type === "emergency") msg = "Emergency! Please check your vehicle.";
+
+  sendWhatsApp(msg);
+}
+
+function sendCustom(){
+  const msg = document.getElementById("customMsg").value;
+  if(!msg) return alert("Enter message");
+  sendWhatsApp(msg);
+}
+
+function sendWhatsApp(message){
+  const phone = vehicle.phone;
+  const url = https://wa.me/${phone}?text=${encodeURIComponent(message)};
+  window.location.href = url;
+}
+</script>
+
+</body>
+</html>
