@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Add Vehicle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>➕ Add Vehicle</h2>
+
+  <input id="name" placeholder="Vehicle Type (Bike/Car)">
+  <input id="number" placeholder="Vehicle Number">
+  <input id="phone" placeholder="Phone (91XXXXXXXXXX)">
+
+<button onclick="addVehicle()">Generate QR</button>
+
+  <div id="qrSection"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<script>
+function addVehicle(){
+  const name = document.getElementById("name").value;
+  const number = document.getElementById("number").value;
+  const phone = document.getElementById("phone").value;
+
+  if(!name || !number || !phone){
+    alert("Fill all fields");
+    return;
+  }
+
+  const id = Date.now().toString();
+
+  const data = JSON.parse(localStorage.getItem("vehicles")) || {};
+
+  data[id] = { name, number, phone };
+
+  localStorage.setItem("vehicles", JSON.stringify(data));
+
+  const url = `${window.location.origin}/gmtech/?id=${id}`;
+
+  document.getElementById("qrSection").innerHTML =
+    `<p>QR for ${number}</p>
+     <canvas id="qr"></canvas>
+     <p>${url}</p>`;
+
+  QRCode.toCanvas(document.getElementById("qr"), url);
+}
+</script>
+
+</body>
+</html>
